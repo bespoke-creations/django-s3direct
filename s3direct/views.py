@@ -1,4 +1,6 @@
 import json
+import mimetypes
+
 from datetime import datetime
 from django.conf import settings
 from django.http import (HttpResponse, HttpResponseBadRequest,
@@ -6,6 +8,7 @@ from django.http import (HttpResponse, HttpResponseBadRequest,
                          HttpResponseServerError)
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
+
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -14,6 +17,8 @@ from .utils import (get_aws_credentials, get_aws_v4_signature,
                     get_aws_v4_signing_key, get_s3direct_destinations, get_key)
 
 
+mimetypes.add_type("video/x-matroska", ".mkv", strict=False)
+
 @csrf_protect
 @require_POST
 def get_upload_params(request):
@@ -21,6 +26,10 @@ def get_upload_params(request):
     file_name = request.POST['name']
     file_type = request.POST['type']
     file_size = int(request.POST['size'])
+
+    if file_type == '':
+        file_type = mimetypes.guess_type(file_name, strict=False)[
+            0] or ''
 
     dest = get_s3direct_destinations().get(request.POST.get('dest', None),
                                            None)
