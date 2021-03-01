@@ -47,10 +47,11 @@ def get_aws_v4_signature(key, message):
     return hmac.new(key, message.encode('utf-8'), hashlib.sha256).hexdigest()
 
 
-def get_key(key, file_name, dest):
+def get_key(key, user, file_name, dest):
     if hasattr(key, '__call__'):
         fn_args = [
             file_name,
+            user
         ]
         args = dest.get('key_args')
         if args:
