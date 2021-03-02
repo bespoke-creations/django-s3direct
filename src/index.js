@@ -229,6 +229,11 @@ const initiateUpload = (element, signingUrl, uploadParameters, file, dest) => {
   });
 };
 
+const setFormName = name => {
+  const name_input = document.querySelector('#videoUploadForm input[name=name]');
+  name_input.value = name;
+};
+
 const checkFileAndInitiateUpload = event => {
   const element = event.target.parentElement;
   const file = element.querySelector('.file-input').files[0];
@@ -247,6 +252,7 @@ const checkFileAndInitiateUpload = event => {
     const uploadParameters = parseJson(response);
     switch (status) {
       case 200:
+        setFormName(file.name.replace(/\.[^/.]+$/, ""))
         initiateUpload(element, signerUrl, uploadParameters, file, dest);
         break;
       case 400:
