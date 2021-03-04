@@ -231,7 +231,9 @@ const initiateUpload = (element, signingUrl, uploadParameters, file, dest) => {
 
 const setFormName = name => {
   const name_input = document.querySelector('#videoUploadForm input[name=name]');
-  name_input.value = name;
+  if (name_input !== null) {
+      name_input.value = name;
+  }
 };
 
 const checkFileAndInitiateUpload = event => {
