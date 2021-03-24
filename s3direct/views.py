@@ -1,5 +1,6 @@
 import json
 import mimetypes
+import uuid
 
 from datetime import datetime
 from django.conf import settings
@@ -80,9 +81,11 @@ def get_upload_params(request):
         resp = json.dumps({'error': 'AWS credentials config missing.'})
         return HttpResponseServerError(resp, content_type='application/json')
 
+    uuid_key = uuid.uuid4().hex
+
     upload_data = {
         'object_key':
-        get_key(key, request.user, file_name, dest),
+        get_key(key, request.user, file_name, dest, uuid_key),
         'access_key_id':
         aws_credentials.access_key,
         'session_token':
@@ -96,7 +99,8 @@ def get_upload_params(request):
         'acl':
         dest.get('acl') or 'public-read',
         'allow_existence_optimization':
-        dest.get('allow_existence_optimization', False)
+        dest.get('allow_existence_optimization', False),
+        'uuid_key': uuid_key
     }
 
     optional_params = [
