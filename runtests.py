@@ -73,10 +73,10 @@ settings.configure(
             'key': 'uploads/folder/'
         },
         'function-object-key': {
-            'key': lambda original_filename: 'images/unique.jpg'
+            'key': lambda original_filename, user, key: 'images/unique.jpg'
         },
         'function-object-key-args': {
-            'key': lambda original_filename, args: args + '/' + 'filename.jpg',
+            'key': lambda original_filename, user, key, args: args + '/' + 'filename.jpg',
             'key_args': 'uploads/folder'
         },
         'policy-conditions': {
