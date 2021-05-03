@@ -506,7 +506,7 @@ class AWSCredentialsTest(TestCase):
         )
         botocore_mock.get_session(
         ).get_credentials.return_value = credentials_mock
-        credentials = get_aws_credentials()
+        credentials = get_aws_credentials({})
         botocore_mock.get_session().get_credentials.assert_called_once_with()
         self.assertEqual(credentials.token, 'token')
         self.assertEqual(credentials.secret_key, 'secret_key')
@@ -515,7 +515,17 @@ class AWSCredentialsTest(TestCase):
     @override_settings(AWS_ACCESS_KEY_ID='local_access_key',
                        AWS_SECRET_ACCESS_KEY='local_secret_key')
     def test_retrieves_aws_credentials_from_django_config(self):
-        credentials = get_aws_credentials()
+        credentials = get_aws_credentials({})
         self.assertIsNone(credentials.token)
         self.assertEqual(credentials.secret_key, 'local_secret_key')
         self.assertEqual(credentials.access_key, 'local_access_key')
+
+    def test_retrieves_aws_credentials_from_destination_config(self):
+        dest = {
+            'aws_access_key': 'dest_access_key',
+            'aws_secret_key': 'dest_secret_key'
+        }
+        credentials = get_aws_credentials(dest)
+        self.assertIsNone(credentials.token)
+        self.assertEqual(credentials.secret_key, 'dest_secret_key')
+        self.assertEqual(credentials.access_key, 'dest_access_key')
