@@ -76,7 +76,7 @@ def get_upload_params(request):
         resp = json.dumps({'error': 'S3 endpoint config missing.'})
         return HttpResponseServerError(resp, content_type='application/json')
 
-    aws_credentials = get_aws_credentials()
+    aws_credentials = get_aws_credentials(dest)
     if not aws_credentials.secret_key or not aws_credentials.access_key:
         resp = json.dumps({'error': 'AWS credentials config missing.'})
         return HttpResponseServerError(resp, content_type='application/json')
@@ -137,7 +137,7 @@ def generate_aws_v4_signature(request):
         resp = json.dumps({'error': 'S3 region config missing.'})
         return HttpResponseServerError(resp, content_type='application/json')
 
-    aws_credentials = get_aws_credentials()
+    aws_credentials = get_aws_credentials(dest)
     if not aws_credentials.secret_key or not aws_credentials.access_key:
         resp = json.dumps({'error': 'AWS credentials config missing.'})
         return HttpResponseServerError(resp, content_type='application/json')

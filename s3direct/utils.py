@@ -65,7 +65,15 @@ def get_key(key, user, file_name, dest, uuid_key):
     return object_key
 
 
-def get_aws_credentials():
+def get_aws_credentials(dest):
+    # Use access keys if given for the destination
+    access_key = dest.get('aws_access_key')
+    secret_key = dest.get('aws_secret_key')
+
+    if access_key and secret_key:
+        # AWS tokens are not created for pregenerated access keys
+        return AWSCredentials(None, secret_key, access_key)
+
     access_key = getattr(settings, 'AWS_ACCESS_KEY_ID', None)
     secret_key = getattr(settings, 'AWS_SECRET_ACCESS_KEY', None)
     if access_key and secret_key:
